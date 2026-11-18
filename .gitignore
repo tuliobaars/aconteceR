@@ -1,0 +1,39 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.Rapp.history
+*.Rcheck/
+*.tar.gz
+renv/library/
+renv/staging/
+
+# Dependencies, caches and build output
+node_modules/
+.venv/
+venv/
+__pycache__/
+dist/
+build/
+coverage/
+
+# Local data: the app stores events in a SQLite file
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# testthat failure dumps
+tests/testthat/_problems/
+
+# macOS Finder / archive metadata
+.DS_Store
+__MACOSX/
+._*
+
+# Uploaded archives
+*.zip
+
+# OpenStreetMap download cache (inst/scripts/fetch_places_osm.R)
+osm-cache/

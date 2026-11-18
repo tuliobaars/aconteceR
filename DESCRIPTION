@@ -1,0 +1,38 @@
+Package: aconteceR
+Title: Find, Categorise and Add Local Events on a Map
+Version: 0.5.0
+Authors@R: c(
+    person("Tulio", "Name", email = "you@example.com", role = c("aut", "cre", "cph")),
+    person("Vladimir", "Agafonkin", role = c("ctb", "cph"),
+           comment = "Leaflet library in inst/www/vendor/leaflet"),
+    person("CloudMade", role = "cph",
+           comment = "Leaflet library in inst/www/vendor/leaflet")
+    )
+Description: A bilingual (Brazilian Portuguese and English) Shiny app to find
+    events near you: it opens on the closest city, shows events on a map
+    coloured by price or category, with clustering and a monthly calendar, and
+    lets you search, import and add events. The map and calendar modules are
+    generic, so other projects (for example a rent and buy price map) can
+    reuse them. Places (bars, clubs, restaurants, venues) come from
+    OpenStreetMap, with opening hours, vibes, an "open late" filter, a
+    neighbourhood view, a night-out planner and "before and after" suggestions
+    around events. The same interface also ships as a single standalone HTML
+    file.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends:
+    R (>= 4.0.0)
+Imports:
+    DBI,
+    htmltools,
+    jsonlite,
+    RSQLite,
+    shiny (>= 1.7.0),
+    stats,
+    tools,
+    utils
+Suggests:
+    pkgload,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

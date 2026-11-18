@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>aconteceR</title>
+<!--
+  aconteceR, standalone edition. One self-contained file: open it in any modern
+  browser, no server and no install. Map tiles come from OpenStreetMap when
+  online; everything else works offline.
+
+  GENERATED FILE. Do not edit by hand. Edit inst/standalone/template.html and
+  the shared assets in inst/www and inst/i18n, then rebuild with
+  aconteceR::build_standalone() or `node tools/build-standalone.mjs`.
+
+  Licence: MIT (see LICENSE.md in the repository).
+  Bundles Leaflet 1.3.1, BSD-2-Clause; its licence text follows.
+@@include www/vendor/leaflet/LICENSE
+-->
+<style>
+@@include www/vendor/leaflet/leaflet.css
+</style>
+<style>
+@@include www/taiga-tokens.css
+</style>
+<style>
+@@include www/aconteceR.css
+</style>
+</head>
+<body data-i18n-doc-title="doc_title">
+<div class="ac-app" id="ac-app" data-mode="events">
+  <header class="ac-top">
+    <a class="ac-logo" href="#" aria-label="aconteceR">
+      <span class="ac-logo-tile" data-ac-icon="pin" aria-hidden="true"></span>
+      <span class="ac-logo-name" data-i18n="app_name">aconteceR</span>
+    </a>
+    <label class="ac-search">
+      <span data-ac-icon="search" aria-hidden="true"></span>
+      <span class="ac-sr-only" data-i18n="search_ph_top"></span>
+      <input type="search" id="ev-q" autocomplete="off" data-i18n-ph="search_ph_top">
+    </label>
+    <div class="ac-top-actions">
+      <div id="ac-place-slot"></div>
+      <button type="button" class="ac-btn ac-btn-primary" data-open-pane="add"
+              data-i18n-title="tab_add"><span data-ac-icon="plus"></span><span class="ac-btn-label" data-i18n="tab_add"></span></button>
+      <button type="button" class="ac-iconbtn" data-open-pane="search"
+              data-i18n-aria="tab_search" data-i18n-title="tab_search"><span data-ac-icon="inbox"></span></button>
+      <div class="ac-lang" role="group" data-i18n-aria="lang_group_aria">
+        <button type="button" class="ac-lang-btn" data-lang="pt" lang="pt-BR" title="Portugu&ecirc;s (Brasil)">PT</button>
+        <button type="button" class="ac-lang-btn" data-lang="en" lang="en" title="English">EN</button>
+      </div>
+      <button type="button" class="ac-iconbtn ac-theme-toggle" aria-pressed="false"
+              data-i18n-aria="theme_toggle_aria" data-i18n-title="theme_toggle_aria">
+        <span class="ac-icon-sun" data-ac-icon="sun"></span><span class="ac-icon-moon" data-ac-icon="moon"></span>
+      </button>
+    </div>
+  </header>
+
+  <section class="ac-hero">
+    <div>
+      <h1 class="ac-hello"><span data-ac-greeting></span>, <span class="ac-grad" data-ac-city-name></span></h1>
+      <p class="ac-hero-sub" data-i18n="hero_sub"></p>
+    </div>
+    <button type="button" class="ac-btn ac-btn-primary ac-decide-btn" data-open-pane="decide">
+      <span data-ac-icon="sparkles"></span><span data-i18n="decide_btn"></span></button>
+  </section>
+
+  <div class="ac-filterbar">
+  <div class="ac-chipset ac-mode" id="f-mode" data-mode="single" data-default="events" data-app-mode
+       role="group" data-i18n-aria="mode_aria">
+    <button type="button" class="ac-chip is-on" data-value="events"><span data-ac-icon="calendar"></span><span data-i18n="mode_events"></span></button>
+    <button type="button" class="ac-chip" data-value="places"><span data-ac-icon="pin"></span><span data-i18n="mode_places"></span></button>
+  </div>
+  <nav class="ac-filters ac-only-events" data-i18n-aria="filters_aria">
+    <div class="ac-chipset" id="f-when" data-mode="single" data-default="all">
+      <button type="button" class="ac-chip" data-value="today" data-i18n="when_today"></button>
+      <button type="button" class="ac-chip" data-value="weekend" data-i18n="when_weekend"></button>
+      <button type="button" class="ac-chip" data-value="7d" data-i18n="when_7d"></button>
+      <button type="button" class="ac-chip" data-value="30d" data-i18n="when_30d"></button>
+      <button type="button" class="ac-chip is-on" data-value="all" data-i18n="when_all"></button>
+    </div>
+    <span class="ac-sep" aria-hidden="true"></span>
+    <div class="ac-chipset" id="f-cat" data-mode="multi"></div>
+    <span class="ac-sep" aria-hidden="true"></span>
+    <div class="ac-chipset" id="f-price" data-mode="multi">
+      <button type="button" class="ac-chip" data-value="free" data-i18n="price_free"></button>
+      <button type="button" class="ac-chip" data-value="paid" data-i18n="price_paid"></button>
+      <button type="button" class="ac-chip" data-value="donation" data-i18n="price_donation"></button>
+    </div>
+  </nav>
+  <nav class="ac-filters ac-only-places" data-i18n-aria="filters_aria">
+    <div class="ac-chipset" id="p-open" data-mode="multi">
+      <button type="button" class="ac-chip ac-chip-open" data-value="open"><span class="ac-pm-dot"></span><span data-i18n="place_open_now"></span></button>
+      <button type="button" class="ac-chip ac-chip-late" data-value="late" data-i18n-title="place_open_late_title"><span data-ac-icon="moon"></span><span data-i18n="place_open_late"></span></button>
+    </div>
+    <span class="ac-sep" aria-hidden="true"></span>
+    <div class="ac-chipset" id="p-cat" data-mode="multi"></div>
+    <span class="ac-sep" aria-hidden="true"></span>
+    <div class="ac-chipset" id="p-vibe" data-mode="multi"></div>
+  </nav>
+  </div>
+
+  <main class="ac-content">
+    <section class="ac-panel ac-listpanel" data-panes="list" data-i18n-aria="sidebar_aria">
+      <!-- Event list -->
+      <div class="ac-pane" data-pane="list">
+        <div class="ac-only-events">
+          <div class="ac-pane-head">
+            <h2 class="ac-pane-title" data-i18n="list_title"></h2>
+            <span class="ac-pane-count" id="ev-summary" aria-live="polite"></span>
+          </div>
+          <p class="ac-night-hint"><span data-ac-icon="moon"></span><span data-i18n="night_first"></span></p>
+          <div class="ac-pane-body" id="ev-list"></div>
+        </div>
+        <div class="ac-only-places">
+          <div class="ac-pane-head">
+            <h2 class="ac-pane-title" data-i18n="places_title"></h2>
+            <span class="ac-pane-count" id="pl-summary" aria-live="polite"></span>
+          </div>
+          <p class="ac-demo-note" id="pl-demo" hidden><span data-ac-icon="sparkles"></span><span data-i18n="places_demo_note"></span></p>
+          <p class="ac-demo-note ac-osm-note" id="pl-osm" hidden><span data-ac-icon="clock"></span><span data-i18n="places_osm_note"></span> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer"><span data-i18n="osm_attribution"></span></a></p>
+          <div class="ac-pane-body" id="pl-list"></div>
+        </div>
+      </div>
+
+      <!-- Can't decide? -->
+      <div class="ac-pane" data-pane="decide" hidden>
+        <div class="ac-pane-head">
+          <button type="button" class="ac-iconbtn ac-iconbtn-sm" data-open-pane="list"
+                  data-i18n-aria="back" data-i18n-title="back"><span data-ac-icon="back"></span></button>
+          <h2 class="ac-pane-title" data-i18n="decide_title"></h2>
+        </div>
+        <p class="ac-demo-note" id="dq-demo" hidden><span data-ac-icon="sparkles"></span><span data-i18n="places_demo_note"></span></p>
+        <p class="ac-demo-note ac-osm-note" id="dq-osm" hidden><span data-ac-icon="clock"></span><span data-i18n="places_osm_note"></span> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer"><span data-i18n="osm_attribution"></span></a></p>
+        <div id="ac-decide"></div>
+      </div>
+
+      <!-- Search & import -->
+      <div class="ac-pane" data-pane="search" hidden>
+        <div class="ac-pane-head">
+          <button type="button" class="ac-iconbtn ac-iconbtn-sm" data-open-pane="list"
+                  data-i18n-aria="back" data-i18n-title="back"><span data-ac-icon="back"></span></button>
+          <h2 class="ac-pane-title" data-i18n="tab_search"></h2>
+        </div>
+        <div class="ac-pane-form">
+          <div class="ac-field">
+            <label class="ac-label" for="sr-q" data-i18n="search_what"></label>
+            <input type="search" id="sr-q" class="ac-input" autocomplete="off" data-i18n-ph="search_what_ph">
+          </div>
+          <div class="ac-field">
+            <span class="ac-label" data-i18n="search_where"></span>
+            <div class="ac-chipset ac-form-chips" id="sr-scope" data-mode="single" data-default="city">
+              <button type="button" class="ac-chip is-on" data-value="city" data-i18n="scope_city"></button>
+              <button type="button" class="ac-chip" data-value="all" data-i18n="scope_all"></button>
+            </div>
+          </div>
+          <div class="ac-field">
+            <span class="ac-label" data-i18n="sources_label"></span>
+            <div class="ac-chipset ac-form-chips ac-sources" id="sr-sites" data-mode="multi"></div>
+            <p class="ac-hint" data-i18n="sources_hint"></p>
+          </div>
+          <div class="ac-actions">
+            <button type="button" class="ac-btn ac-btn-accent" id="sr-go" data-i18n="search_btn"></button>
+            <button type="button" class="ac-btn" id="sr-import" data-i18n="autopopulate_btn"></button>
+          </div>
+          <div class="ac-pane-count" id="sr-summary" aria-live="polite"></div>
+        </div>
+        <div class="ac-pane-body" id="sr-list"></div>
+      </div>
+
+      <!-- Add event -->
+      <div class="ac-pane" data-pane="add" hidden>
+        <div class="ac-pane-head">
+          <button type="button" class="ac-iconbtn ac-iconbtn-sm" data-open-pane="list"
+                  data-i18n-aria="back" data-i18n-title="back"><span data-ac-icon="back"></span></button>
+          <h2 class="ac-pane-title" data-i18n="tab_add"></h2>
+        </div>
+        <form class="ac-pane-form" id="add-form" novalidate>
+          <div class="ac-field">
+            <label class="ac-label" for="add-title" data-i18n="form_title"></label>
+            <input type="text" id="add-title" class="ac-input" maxlength="120" required>
+          </div>
+          <div class="ac-row">
+            <div class="ac-field">
+              <label class="ac-label" for="add-date" data-i18n="form_date"></label>
+              <input type="date" id="add-date" class="ac-input" required>
+            </div>
+            <div class="ac-field">
+              <label class="ac-label" for="add-time" data-i18n="form_time"></label>
+              <input type="time" id="add-time" class="ac-input" value="19:00" required>
+            </div>
+          </div>
+          <div class="ac-field">
+            <label class="ac-label" for="add-venue" data-i18n="form_venue"></label>
+            <input type="text" id="add-venue" class="ac-input" maxlength="120">
+          </div>
+          <div class="ac-field">
+            <span class="ac-label" data-i18n="category_label"></span>
+            <div class="ac-chipset ac-form-chips" id="add-cat" data-mode="single" data-default="music"></div>
+          </div>
+          <div class="ac-field">
+            <span class="ac-label" data-i18n="price_label"></span>
+            <div class="ac-chipset ac-form-chips" id="add-price" data-mode="single" data-default="free">
+              <button type="button" class="ac-chip is-on" data-value="free" data-i18n="price_free"></button>
+              <button type="button" class="ac-chip" data-value="paid" data-i18n="price_paid"></button>
+              <button type="button" class="ac-chip" data-value="donation" data-i18n="price_donation"></button>
+              <button type="button" class="ac-chip" data-value="unknown" data-i18n="price_unknown"></button>
+            </div>
+          </div>
+          <div class="ac-field" id="add-amount-wrap" hidden>
+            <label class="ac-label" for="add-amount" data-i18n="form_ticket_price"></label>
+            <input type="number" id="add-amount" class="ac-input" min="0" step="0.01" inputmode="decimal">
+          </div>
+          <div class="ac-field">
+            <label class="ac-label" for="add-url" data-i18n="form_url"></label>
+            <input type="url" id="add-url" class="ac-input" placeholder="https://">
+          </div>
+          <div class="ac-field">
+            <label class="ac-label" for="add-desc" data-i18n="form_desc"></label>
+            <textarea id="add-desc" class="ac-textarea" rows="3" maxlength="2000"></textarea>
+          </div>
+          <div class="ac-where"><span data-ac-icon="pin"></span><span id="add-where" aria-live="polite"></span></div>
+          <button type="submit" class="ac-btn ac-btn-primary ac-btn-block" data-i18n="save_btn"></button>
+          <p class="ac-hint" data-i18n="standalone_saved_note"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="ac-panel ac-stage">
+      <div class="ac-stage-head">
+        <div class="ac-seg ac-view-switch" role="group" data-target="ac-map" data-i18n-aria="view_aria">
+          <button type="button" class="ac-seg-btn is-active" data-value="map" aria-pressed="true">
+            <span data-ac-icon="map"></span><span data-i18n="view_map"></span></button>
+          <button type="button" class="ac-seg-btn" data-value="calendar" aria-pressed="false">
+            <span data-ac-icon="calendar"></span><span data-i18n="view_calendar"></span></button>
+        </div>
+        <div id="ac-modes-slot"></div>
+      </div>
+      <div class="ac-pm" id="ac-map" data-view="map">
+        <div class="ac-pm-body">
+          <div class="ac-pm-canvas"></div>
+          <div class="ac-pm-overlay" data-view-name="calendar"><div id="ac-calendar"></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script type="application/json" id="ac-i18n-dict">
+@@include i18n/strings.json
+</script>
+<script type="text/csv" id="ac-data-cities">
+@@include extdata/cities.csv
+</script>
+<script type="text/csv" id="ac-data-sites">
+@@include extdata/sites.csv
+</script>
+<script type="text/csv" id="ac-data-templates">
+@@include extdata/site_templates.csv
+</script>
+<script type="text/csv" id="ac-data-events">
+@@include extdata/sample_events.csv
+</script>
+<script type="text/csv" id="ac-data-places">
+@@include extdata/places.csv
+</script>
+<script type="text/csv" id="ac-data-vibes">
+@@include extdata/vibes.csv
+</script>
+<script>
+@@include www/vendor/leaflet/leaflet.js
+</script>
+<script>
+@@include www/ac-core.js
+</script>
+<script>
+@@include www/ac-map.js
+</script>
+<script>
+@@include www/ac-calendar.js
+</script>
+<script>
+@@include www/ac-places.js
+</script>
+<script>
+@@include www/ac-decide.js
+</script>
+<script>
+@@include standalone/ac-standalone.js
+</script>
+</body>
+</html>

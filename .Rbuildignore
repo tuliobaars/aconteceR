@@ -1,0 +1,16 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.md$
+^NEWS\.md$
+^index\.html$
+^app\.R$
+^tools$
+^__MACOSX$
+^\.DS_Store$
+^.*/\.DS_Store$
+^inst/extdata/events\.sqlite$
+^\.gitattributes$
+^screenshots$
+^.*\.zip$
+^osm-cache$
