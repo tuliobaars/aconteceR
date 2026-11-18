@@ -1,24 +1,28 @@
-aconteceR is released under the MIT licence (see LICENSE / LICENSE.md).
+Versão em inglês (English version): inst/COPYRIGHTS.en
 
-It bundles third-party code:
+O aconteceR é distribuído sob a licença MIT (consulte LICENSE / LICENSE.md).
+
+Ele inclui código de terceiros:
 
   inst/www/vendor/leaflet/leaflet.js, leaflet.css
     Leaflet 1.3.1, https://leafletjs.com
     Copyright (c) 2010-2017, Vladimir Agafonkin
     Copyright (c) 2010-2011, CloudMade
-    BSD 2-Clause licence, full text in inst/www/vendor/leaflet/LICENSE.
-    The standalone index.html repeats that licence text in its header.
+    Licença BSD de 2 cláusulas, texto completo em inst/www/vendor/leaflet/LICENSE.
+    O arquivo autônomo index.html repete esse texto de licença em seu cabeçalho.
 
-Map tiles shown at run time come from OpenStreetMap (data (c) OpenStreetMap
-contributors, ODbL); the map keeps the required attribution visible.
+Os blocos de mapa exibidos em tempo de execução vêm do OpenStreetMap (dados (c)
+contribuidores do OpenStreetMap, ODbL); o mapa mantém a atribuição exigida
+sempre visível.
 
-Place data. inst/extdata/places.csv, when produced by
-inst/scripts/fetch_places_osm.R (fetch_osm_places()), contains data from
+Dados de lugares. O arquivo inst/extdata/places.csv, quando produzido por
+inst/scripts/fetch_places_osm.R (fetch_osm_places()), contém dados do
 OpenStreetMap:
-    (c) OpenStreetMap contributors
+    (c) Contribuidores do OpenStreetMap
     Open Database Licence (ODbL) 1.0, https://opendatacommons.org/licenses/odbl/
     https://www.openstreetmap.org/copyright
-It is a derived database and is distributed under the ODbL, not the MIT
-licence; rows with source = "openstreetmap" come from it. The app shows this
-attribution next to OpenStreetMap places. Until that script is run, the
-bundled places.csv is generated demo data (no third-party content).
+Trata-se de um banco de dados derivado distribuído sob a licença ODbL, e não
+sob a licença MIT; as linhas com source = "openstreetmap" provêm dele. O
+aplicativo exibe essa atribuição ao lado dos lugares do OpenStreetMap. Até que
+esse script seja executado, o places.csv embutido contém dados de demonstração
+gerados (sem conteúdo de terceiros).

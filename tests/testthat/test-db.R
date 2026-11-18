@@ -92,3 +92,21 @@ test_that("demo events are dated again once they are all in the past", {
   expect_true(all(got$starts_at[got$source == "sample"] >= "2027-01-01"))
   expect_true("Mine" %in% got$title)
 })
+
+test_that("update_events refreshes sample and catalog events on every new day while keeping user events", {
+  con <- db_connect(":memory:")
+  on.exit(DBI::dbDisconnect(con))
+  cities <- load_cities()[1:2, ]
+  db_insert_event(con, clean_event(title = "User party", starts_at = "2026-01-01 20:00"))
+
+  added1 <- update_events(con, cities_df = cities, today = as.Date("2026-11-17"))
+  expect_gt(added1, 1280L)
+  expect_equal(update_events(con, cities_df = cities, today = as.Date("2026-11-17")), 0L)
+
+  # Next day: stale sample and catalog dates are refreshed to the new day.
+  added2 <- update_events(con, cities_df = cities, today = as.Date("2026-11-18"))
+  expect_equal(added2, added1)
+  got <- db_fetch_events(con)
+  expect_true("User party" %in% got$title)
+  expect_true(all(got$starts_at[got$source != "user"] >= "2026-11-18"))
+})

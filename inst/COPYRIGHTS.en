@@ -1,0 +1,24 @@
+aconteceR is released under the MIT licence (see LICENSE / LICENSE.md).
+
+It bundles third-party code:
+
+  inst/www/vendor/leaflet/leaflet.js, leaflet.css
+    Leaflet 1.3.1, https://leafletjs.com
+    Copyright (c) 2010-2017, Vladimir Agafonkin
+    Copyright (c) 2010-2011, CloudMade
+    BSD 2-Clause licence, full text in inst/www/vendor/leaflet/LICENSE.
+    The standalone index.html repeats that licence text in its header.
+
+Map tiles shown at run time come from OpenStreetMap (data (c) OpenStreetMap
+contributors, ODbL); the map keeps the required attribution visible.
+
+Place data. inst/extdata/places.csv, when produced by
+inst/scripts/fetch_places_osm.R (fetch_osm_places()), contains data from
+OpenStreetMap:
+    (c) OpenStreetMap contributors
+    Open Database Licence (ODbL) 1.0, https://opendatacommons.org/licenses/odbl/
+    https://www.openstreetmap.org/copyright
+It is a derived database and is distributed under the ODbL, not the MIT
+licence; rows with source = "openstreetmap" come from it. The app shows this
+attribution next to OpenStreetMap places. Until that script is run, the
+bundled places.csv is generated demo data (no third-party content).

@@ -158,3 +158,50 @@ db_seed_samples <- function(con,
   })
   invisible(added)
 }
+
+# Refresh sample and external catalog events so every open of the app has
+# up-to-date events dated relative to `today`, while keeping user-added rows.
+update_events <- function(con,
+                          seed_samples = TRUE,
+                          autopopulate = TRUE,
+                          cities_df = load_cities(),
+                          today = Sys.Date()) {
+  today_str <- format(as.Date(today), "%Y-%m-%d")
+  added <- 0L
+
+  if (isTRUE(seed_samples)) {
+    have <- DBI::dbGetQuery(
+      con,
+      "SELECT COUNT(*) AS n, MIN(starts_at) AS first FROM events WHERE source = 'sample'"
+    )
+    if (have$n[[1]] > 0L && !is.na(have$first[[1]]) && substr(have$first[[1]], 1L, 10L) < today_str) {
+      DBI::dbExecute(con, "DELETE FROM events WHERE source = 'sample'")
+    }
+    added <- added + db_seed_samples(con, today = today)
+  }
+
+  if (isTRUE(autopopulate)) {
+    sites <- external_site_catalog()$name
+    if (length(sites) > 0L) {
+      placeholders <- paste(rep("?", length(sites)), collapse = ", ")
+      have_sites <- DBI::dbGetQuery(
+        con,
+        sprintf("SELECT COUNT(*) AS n, MIN(starts_at) AS first FROM events WHERE source IN (%s)", placeholders),
+        params = as.list(sites)
+      )
+      tpl <- site_templates()
+      min_offset <- if (nrow(tpl)) min(as.integer(tpl$days_from_now), na.rm = TRUE) else 0L
+      expected_first <- format(as.Date(today) + min_offset, "%Y-%m-%d")
+      if (have_sites$n[[1]] > 0L && !is.na(have_sites$first[[1]]) && substr(have_sites$first[[1]], 1L, 10L) < expected_first) {
+        DBI::dbExecute(
+          con,
+          sprintf("DELETE FROM events WHERE source IN (%s)", placeholders),
+          params = as.list(sites)
+        )
+      }
+      added <- added + autopopulate_events(con, sites = sites, cities_df = cities_df, today = today)
+    }
+  }
+
+  invisible(added)
+}

@@ -1,5 +1,5 @@
 Package: aconteceR
-Title: Find, Categorise and Add Local Events on a Map
+Title: Encontre, Categorize e Adicione Eventos e Lugares Locais em um Mapa
 Version: 0.5.0
 Authors@R: c(
     person("Tulio", "Name", email = "you@example.com", role = c("aut", "cre", "cph")),
@@ -8,16 +8,18 @@ Authors@R: c(
     person("CloudMade", role = "cph",
            comment = "Leaflet library in inst/www/vendor/leaflet")
     )
-Description: A bilingual (Brazilian Portuguese and English) Shiny app to find
-    events near you: it opens on the closest city, shows events on a map
-    coloured by price or category, with clustering and a monthly calendar, and
-    lets you search, import and add events. The map and calendar modules are
-    generic, so other projects (for example a rent and buy price map) can
-    reuse them. Places (bars, clubs, restaurants, venues) come from
-    OpenStreetMap, with opening hours, vibes, an "open late" filter, a
-    neighbourhood view, a night-out planner and "before and after" suggestions
-    around events. The same interface also ships as a single standalone HTML
-    file.
+Description: Aplicativo Shiny bilíngue (Português do Brasil e Inglês) para
+    encontrar eventos e lugares perto de você: abre na cidade mais próxima,
+    exibe eventos em um mapa colorido por preço ou categoria, com agrupamento e
+    calendário mensal, atualiza automaticamente os eventos e gera a edição HTML
+    autônoma ao abrir, e permite buscar, importar e adicionar eventos. Os
+    módulos de mapa e calendário são genéricos e podem ser reutilizados em
+    outros projetos (por exemplo, um mapa de preços de aluguel e venda). Os
+    lugares (bares, baladas, restaurantes, espaços culturais) vêm do
+    OpenStreetMap, com horários de funcionamento, vibes, filtro "aberto até
+    tarde", visualização por bairro, planejador de noite e sugestões de "antes
+    e depois" ao redor dos eventos. A mesma interface também é distribuída como
+    um único arquivo HTML autônomo (documentação em inglês em README.en.md).
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:

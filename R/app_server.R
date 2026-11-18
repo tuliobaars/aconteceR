@@ -4,17 +4,24 @@
 # event anywhere switches to the map view and flies to it.
 
 app_server <- function(cities, db_path = default_db_path(), seed_samples = TRUE,
-                       default_lang = "pt", places = load_places()) {
+                       default_lang = "pt", places = load_places(),
+                       standalone_path = "index.html") {
   force(cities)
   force(places)
   force(db_path)
   force(seed_samples)
   force(default_lang)
+  force(standalone_path)
 
   function(input, output, session) {
     con <- db_connect(db_path)
     session$onSessionEnded(function() try(DBI::dbDisconnect(con), silent = TRUE))
-    if (isTRUE(seed_samples)) db_seed_samples(con)
+    if (isTRUE(seed_samples)) {
+      update_events(con, seed_samples = TRUE, autopopulate = TRUE, cities_df = cities)
+    }
+    if (!is.null(standalone_path) && nzchar(standalone_path)) {
+      tryCatch(build_standalone(standalone_path), error = function(e) invisible(NULL))
+    }
 
     # input$lang comes from the browser (see lang_toggle() and ac-shiny.js).
     fallback_lang <- detect_lang(session$request$HTTP_ACCEPT_LANGUAGE, default = default_lang)

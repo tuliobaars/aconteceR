@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{event_categories}
 \alias{event_categories}
 \alias{price_types}
@@ -6,11 +7,12 @@
 \alias{price_band_palette}
 \alias{category_palette}
 \alias{event_color_modes}
-\title{Event categories, prices and their colours}
+\title{Categorias de eventos, preços e suas cores}
 \description{
-The two ways an event is classified (category and price type), the price bands
-used by "colour by price", the palettes, and the colour modes of the events
-map (see \code{\link{map_color_factor}}).
+As duas formas de classificar um evento (categoria e tipo de preço), as faixas
+de preço usadas pelo modo "colorir por preço", as paletas e os modos de cor do
+mapa de eventos (consulte \code{\link{map_color_factor}}). (Versão em inglês:
+\code{man-en/event_categories.Rd}.)
 }
 \usage{
 event_categories(lang = "en")
@@ -22,17 +24,17 @@ category_palette()
 event_color_modes(lang = "en")
 }
 \arguments{
-  \item{lang}{\code{"pt"} or \code{"en"}.}
-  \item{price_type}{Character vector: \code{"free"}, \code{"paid"}, \code{"donation"} or \code{"unknown"}.}
-  \item{price}{Ticket price (recycled to the length of \code{price_type}).}
+  \item{lang}{\code{"pt"} ou \code{"en"}.}
+  \item{price_type}{Vetor de caracteres: \code{"free"}, \code{"paid"}, \code{"donation"} ou \code{"unknown"}.}
+  \item{price}{Preço do ingresso (reciclado até o comprimento de \code{price_type}).}
 }
 \value{
-\code{event_categories} and \code{price_types}: named character vectors
-(key = label). \code{price_band}: one of \code{"free"}, \code{"donation"},
-\code{"p1"} (up to R$ 30), \code{"p2"} (30 to 60), \code{"p3"} (60 to 100),
-\code{"p4"} (over 100), \code{"paid_na"} or \code{"unknown"} per event. The
-palettes: named colour vectors. \code{event_color_modes}: a named list with
-\code{price} and \code{category} colour modes.
+\code{event_categories} e \code{price_types}: vetores de caracteres nomeados
+(chave = rótulo). \code{price_band}: um entre \code{"free"}, \code{"donation"},
+\code{"p1"} (até R$ 30), \code{"p2"} (30 a 60), \code{"p3"} (60 a 100),
+\code{"p4"} (acima de 100), \code{"paid_na"} ou \code{"unknown"} por evento. As
+paletas: vetores de cores nomeados. \code{event_color_modes}: uma lista nomeada
+com os modos de cor \code{price} e \code{category}.
 }
 \examples{
 event_categories("pt")

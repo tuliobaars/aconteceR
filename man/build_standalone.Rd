@@ -1,11 +1,13 @@
+\encoding{UTF-8}
 \name{build_standalone}
 \alias{build_standalone}
-\title{Build the standalone HTML edition}
+\title{Gerar a edição HTML autônoma}
 \description{
-Writes one self-contained HTML file with the whole app (styles, scripts,
-Leaflet, translations and demo data inlined). It opens in any browser without
-R or a server; map tiles need the internet. Lines of the template of the form
-\code{@@include path} are replaced by the file \code{inst/path}.
+Grava um único arquivo HTML autossuficiente com todo o aplicativo (estilos,
+scripts, Leaflet, traduções e dados de demonstração embutidos). Ele abre em
+qualquer navegador sem precisar de R ou de um servidor; os blocos do mapa
+precisam de conexão com a internet. As linhas do modelo na forma
+\code{@@include path} são substituídas pelo conteúdo de \code{inst/path}.
 }
 \usage{
 build_standalone(path = "index.html",
@@ -13,13 +15,14 @@ build_standalone(path = "index.html",
                                         package = "aconteceR"))
 }
 \arguments{
-  \item{path}{Output file.}
-  \item{template}{The page template, \code{inst/standalone/template.html}.}
+  \item{path}{Arquivo de saída.}
+  \item{template}{O modelo da página, \code{inst/standalone/template.html}.}
 }
-\value{\code{path}, invisibly.}
+\value{\code{path}, invisivelmente.}
 \details{
-\code{tools/build-standalone.mjs} in the source repository produces a
-byte-identical file with Node.
+O script \code{tools/build-standalone.mjs} no repositório-fonte gera um arquivo
+idêntico byte a byte usando Node. (Versão em inglês:
+\code{man-en/build_standalone.Rd}.)
 }
 \examples{
 out <- tempfile(fileext = ".html")

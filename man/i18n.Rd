@@ -1,16 +1,18 @@
+\encoding{UTF-8}
 \name{i18n}
 \alias{i18n}
 \alias{tr}
 \alias{detect_lang}
-\title{Translations and language detection}
+\title{Traduções e detecção de idioma}
 \description{
-\code{tr} looks up a string in the shared dictionary
-(\code{inst/i18n/strings.json}, Brazilian Portuguese and English), falling back
-to English and then to the key. \code{detect_lang} picks the language from an
-HTTP \code{Accept-Language} header: Portuguese anywhere in the list, or a
-Brazilian region tag such as \code{en-BR}, gives \code{"pt"}; otherwise English
-if listed; else \code{default}. (The browser applies the same rule and also
-looks at the time zone.)
+\code{tr} busca uma string no dicionário compartilhado
+(\code{inst/i18n/strings.json}, Português do Brasil e Inglês), usando Inglês e
+depois a própria chave como fallback. \code{detect_lang} escolhe o idioma a
+partir de um cabeçalho HTTP \code{Accept-Language}: Português em qualquer
+posição da lista, ou uma tag de região brasileira como \code{en-BR}, retorna
+\code{"pt"}; caso contrário, Inglês se estiver listado; ou então \code{default}.
+(O navegador aplica a mesma regra e também verifica o fuso horário.) (Versão em
+inglês: \code{man-en/i18n.Rd}.)
 }
 \usage{
 tr(key, lang = "en")
@@ -18,13 +20,13 @@ tr(key, lang = "en")
 detect_lang(accept_language, default = "en")
 }
 \arguments{
-  \item{key}{Dictionary key.}
-  \item{lang}{\code{"pt"} (also \code{"pt-BR"}) or \code{"en"}; anything else means English.}
-  \item{accept_language}{Header value, e.g. \code{"pt-BR,pt;q=0.9,en;q=0.8"}.}
-  \item{default}{Language when the header names neither Portuguese, English nor Brazil.}
+  \item{key}{Chave do dicionário.}
+  \item{lang}{\code{"pt"} (ou \code{"pt-BR"}) ou \code{"en"}; qualquer outro valor resulta em Inglês.}
+  \item{accept_language}{Valor do cabeçalho, ex.: \code{"pt-BR,pt;q=0.9,en;q=0.8"}.}
+  \item{default}{Idioma quando o cabeçalho não menciona Português, Inglês nem Brasil.}
 }
-\value{\code{tr}: a string (or a character vector for list entries such as month
-names). \code{detect_lang}: \code{"pt"} or \code{"en"}.}
+\value{\code{tr}: uma string (ou vetor de caracteres para entradas em lista,
+como nomes de meses). \code{detect_lang}: \code{"pt"} ou \code{"en"}.}
 \examples{
 tr("tab_add", "pt")
 tr("mon_short", "en")

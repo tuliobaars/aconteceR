@@ -90,7 +90,8 @@ generate_site_events <- function(site_name, cities_df = load_cities(), today = S
   out
 }
 
-provider_external_site <- function(site_name, enabled = TRUE, cities_df = load_cities()) {
+provider_external_site <- function(site_name, enabled = TRUE, cities_df = load_cities(),
+                                   today = Sys.Date()) {
   cat_info <- external_site_catalog()
   idx <- match(site_name, cat_info$name)
   label <- if (is.na(idx)) site_name else cat_info$label[[idx]]
@@ -110,7 +111,7 @@ provider_external_site <- function(site_name, enabled = TRUE, cities_df = load_c
         cities_df
       }
       if (nrow(target_cities) == 0L) return(empty_events())
-      ev <- generate_site_events(site_name, cities_df = target_cities)
+      ev <- generate_site_events(site_name, cities_df = target_cities, today = today)
       filter_events(ev, query = query, from = from, to = to)
     }
   )
@@ -135,20 +136,25 @@ providers_catalog <- function(con, enabled_sites = external_site_catalog()$name,
 # Uses validate_event() and db_insert_event(..., ignore_duplicates = TRUE) so it is safe
 # and idempotent. Returns the number of newly inserted events.
 autopopulate_events <- function(con, sites = external_site_catalog()$name,
-                                city = NULL, query = "", cities_df = load_cities()) {
-  provs <- lapply(sites, function(s) provider_external_site(s, enabled = TRUE, cities_df = cities_df))
+                                city = NULL, query = "", cities_df = load_cities(),
+                                today = Sys.Date()) {
+  provs <- lapply(sites, function(s) {
+    provider_external_site(s, enabled = TRUE, cities_df = cities_df, today = today)
+  })
   res <- search_events(provs, query = query, city = city)
   ev <- res$events
   if (nrow(ev) == 0L) return(0L)
   added <- 0L
-  for (i in seq_len(nrow(ev))) {
-    r <- ev[i, , drop = FALSE]
-    v <- validate_event(as.list(r))
-    if (!v$ok) next
-    if (db_event_exists(con, v$event$title, v$event$city, v$event$starts_at)) next
-    new_id <- db_insert_event(con, v$event, ignore_duplicates = TRUE)
-    if (!is.na(new_id)) added <- added + 1L
-  }
+  DBI::dbWithTransaction(con, {
+    for (i in seq_len(nrow(ev))) {
+      r <- ev[i, , drop = FALSE]
+      v <- validate_event(as.list(r))
+      if (!v$ok) next
+      if (db_event_exists(con, v$event$title, v$event$city, v$event$starts_at)) next
+      new_id <- db_insert_event(con, v$event, ignore_duplicates = TRUE)
+      if (!is.na(new_id)) added <- added + 1L
+    }
+  })
   added
 }
 

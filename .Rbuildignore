@@ -1,8 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^LICENSE\.en\.md$
 ^README\.md$
+^README\.en\.md$
 ^NEWS\.md$
+^NEWS\.en\.md$
+^man-en$
 ^index\.html$
 ^app\.R$
 ^tools$

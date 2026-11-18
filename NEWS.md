@@ -1,143 +1,163 @@
+> 🇺🇸 [Read in English](NEWS.en.md)
+
 # aconteceR 0.5.0
 
-* Places from **OpenStreetMap**: `fetch_osm_places()` queries the public
-  Overpass API (no key), maps tags to the ten categories and to vibe
-  keywords, merges duplicates, picks the neighbourhood, keeps the most
-  complete places per category, caches raw answers and retries politely.
-  `inst/scripts/fetch_places_osm.R` writes `inst/extdata/places.csv`. The old
-  `inst/scripts/fetch_places.R` (a Google Places stub with a key placeholder)
-  is gone; no API key appears anywhere.
-* Opening hours in **OpenStreetMap syntax** (`opening_hours`), read the same
-  way in R (`parse_opening_hours()`) and in the browser; the old
-  `opens_at` / `closes_at` / `open_days` columns still work. Places without
-  readable hours show "Horário não informado" and rank after open ones.
-* New places columns: `address`, `opening_hours`, `rating` (was
-  `google_rating`), `maps_url` (was `google_maps_url`), `osm_url`,
-  `website`. Older files still load.
-* **Plan my night** (results tab in "Can't decide?"): dinner → drinks or a
-  show → dancing, open on arrival and close to each other, with walking
-  times; "show the route on the map".
-* **Before & after**: a button in event popups lists places near the event
-  open before it starts and after it ends.
-* **By neighbourhood**: a map switch (`mod_map_ui(group_by =)`) shows one
-  bubble per neighbourhood, sized by count and coloured by the active mode.
-* **Open late** filter chip: places still open at 02:00 tonight
-  (`is_open_late()`, `filter_places(open_late =)`).
-* Map colour mode **hours** (open now / later today / not listed / closed);
-  the rating mode only appears when the data has ratings.
-* `mod_map_server()` gains `extra_columns`, `show_route()`, `clear_route()`,
-  `set_group()` and `group()`; `AC.PointMap` gains `setRoute()`,
+* Lugares do **OpenStreetMap**: `fetch_osm_places()` consulta a API pública
+  Overpass (sem chave de API), mapeia tags para as dez categorias e palavras-chave
+  de *vibe*, mescla duplicatas, identifica o bairro, mantém os lugares mais
+  completos por categoria, faz cache das respostas brutas e realiza novas
+  tentativas respeitando os limites do servidor. `inst/scripts/fetch_places_osm.R`
+  grava `inst/extdata/places.csv`. O antigo `inst/scripts/fetch_places.R` (um
+  esboço do Google Places com espaço reservado para chave) foi removido; nenhuma
+  chave de API é utilizada.
+* Atualização automática ao abrir o aplicativo: `run_app()` e `app_server()`
+  executam `update_events()` (atualizando eventos de demonstração e do catálogo
+  externo para a data atual) e geram `index.html` (`build_standalone()`) sempre
+  que o aplicativo é aberto.
+* Horários de funcionamento na **sintaxe do OpenStreetMap** (`opening_hours`),
+  lidos da mesma forma no R (`parse_opening_hours()`) e no navegador; as colunas
+  antigas `opens_at` / `closes_at` / `open_days` continuam funcionando. Lugares
+  sem horários legíveis exibem "Horário não informado" e são classificados após
+  os lugares abertos.
+* Novas colunas de lugares: `address`, `opening_hours`, `rating` (antes
+  `google_rating`), `maps_url` (antes `google_maps_url`), `osm_url`,
+  `website`. Arquivos antigos continuam sendo carregados normalmente.
+* **Planejar minha noite** (aba de resultados em "Não sabe onde ir?"): jantar →
+  drinks ou show → dançar, abertos na chegada e próximos uns dos outros, com
+  tempos de caminhada e botão "mostrar rota no mapa".
+* **Antes e depois**: um botão nos popups de eventos lista lugares próximos ao
+  evento abertos antes de ele começar e depois que ele termina.
+* **Por bairro**: um seletor no mapa (`mod_map_ui(group_by =)`) mostra uma bolha
+  por bairro, dimensionada pela quantidade e colorida pelo modo ativo.
+* Filtro **Aberto até tarde**: lugares que ainda estão abertos às 02:00 da
+  madrugada de hoje (`is_open_late()`, `filter_places(open_late =)`).
+* Modo de cor do mapa **horário** (aberto agora / abre hoje / sem horário /
+  fechado); o modo de avaliação só aparece quando os dados possuem avaliações.
+* `mod_map_server()` ganha `extra_columns`, `show_route()`, `clear_route()`,
+  `set_group()` e `group()`; `AC.PointMap` ganha `setRoute()`,
   `clearRoute()`, `setGroup()`.
-* The OpenStreetMap attribution (ODbL) is shown with OSM places.
-* Fixed: `classify_vibes(character())` returns `character()`; category
-  tokens with an underscore (`@cafe_bistro`, `@event_music`) now match their
-  default vibes; restaurants and gastrobars got default vibes.
-* Fixed: a map popup closes when its pin leaves the map (filters, mode switch).
+* A atribuição do OpenStreetMap (ODbL) é exibida junto aos lugares do OSM.
+* Corrigido: `classify_vibes(character())` retorna `character()`; tokens de
+  categoria com sublinhado (`@cafe_bistro`, `@event_music`) agora correspondem
+  às suas *vibes* padrão; restaurantes e gastrobares receberam *vibes* padrão.
+* Corrigido: o popup do mapa fecha quando seu pino sai do mapa (ao filtrar ou
+  trocar de modo).
 
 # aconteceR 0.4.0
 
-* Places: bars, pubs, nightclubs, restaurants, clubs, concert halls, cafés,
-  gastrobars, cultural spaces and rooftops (`inst/extdata/places.csv`), in
-  an Events | Places mode. Each place shows its opening status on the
-  visitor's clock, a review-weighted rating, price level, vibe tags and a
-  Google Maps link. Filters: open now, category, vibe. Map colours:
-  category, vibe or rating.
-* Vibes: 12 groups from free-text keywords via `inst/extdata/vibes.csv`
-  (`classify_vibes()`), for places and events alike.
-* "Can't decide?": five questions, then places and events ranked by what is
-  open or starting, vibe, rating and budget, with reasons; a pick flies the
-  map there.
-* `load_places()`, `place_open_status()` (overnight hours, day ranges that
-  wrap the week), `place_categories()`, `vibe_groups()`,
-  `place_color_modes()`; R and JS share one test fixture for opening hours.
-* The Shiny app reads the visitor's clock from the browser (input `clock`),
-  so "open now" is right wherever the server runs.
-* `mod_map_server()` accepts a reactive `color_modes`.
-* The bundled places are generated demo data (see README), so the app labels
-  them as such.
+* Lugares: bares, pubs, baladas, restaurantes, clubes, casas de show, cafés,
+  gastrobares, espaços culturais e *rooftops* (`inst/extdata/places.csv`), em um
+  modo Eventos | Lugares. Cada lugar mostra seu status de funcionamento pelo
+  relógio do visitante, avaliação ponderada por número de avaliações, faixa de
+  preço, tags de *vibe* e link para o Google Maps. Filtros: aberto agora,
+  categoria, *vibe*. Cores no mapa: categoria, *vibe* ou avaliação.
+* Vibes: 12 grupos extraídos de palavras-chave em texto livre via
+  `inst/extdata/vibes.csv` (`classify_vibes()`), tanto para lugares quanto para
+  eventos.
+* "Não sabe onde ir?": cinco perguntas e, em seguida, lugares e eventos
+  classificados pelo que está aberto ou começando, *vibe*, avaliação e
+  orçamento, com as justificativas; escolher um item leva o mapa até lá.
+* `load_places()`, `place_open_status()` (horários que viram a noite, intervalos
+  de dias que cruzam a semana), `place_categories()`, `vibe_groups()`,
+  `place_color_modes()`; o R e o JS compartilham a mesma *fixture* de testes
+  para horários de funcionamento.
+* O aplicativo Shiny lê o relógio do visitante diretamente do navegador (input
+  `clock`), de modo que "aberto agora" funciona corretamente independentemente
+  do fuso horário do servidor.
+* `mod_map_server()` aceita um `color_modes` reativo.
+* Os lugares embutidos quando gerados para demonstração são identificados como
+  dados de demonstração pelo aplicativo.
 
 # aconteceR 0.3.0
 
-* The app is called **aconteceR** everywhere (header, page title, docs).
-* Time of day: the app opens in light mode and follows the visitor's clock
-  through golden hour, sunset and dusk into dark from 19:00, fading each
-  phase into the next (colours via registered CSS custom properties, map tiles
-  via a CSS filter); a page opened at night walks through the phases. The
-  theme toggle goes through the same phases and is remembered for the session.
-* While the page is dark, night activities lead each day in the lists (R:
-  `order_events()`, `is_night_activity()`; Shiny input `night`).
-* Map tiles no longer need an API key: OpenStreetMap, or Esri's public street
-  map for pages opened from disk (`tiles = "auto"`, the default).
-* Lists are ordered by day and time before grouping, so search results no
-  longer repeat day headers.
-* Fixed: a test used a dictionary key that was removed; Rd usage lines wrapped
-  to 90 characters.
+* O aplicativo passa a se chamar **aconteceR** em todos os lugares (cabeçalho,
+  título da página, documentação).
+* Hora do dia: o aplicativo abre no modo claro e acompanha o relógio do
+  visitante passando pela hora dourada, pôr do sol e crepúsculo até o modo
+  escuro a partir das 19:00, fazendo transição suave entre cada fase (cores via
+  propriedades personalizadas de CSS registradas, blocos do mapa via filtro
+  CSS); uma página aberta à noite percorre as fases em sequência. O botão de
+  alternância de tema passa pelas mesmas fases e é lembrado durante a sessão.
+* Enquanto a página está escura, atividades noturnas aparecem no topo de cada
+  dia nas listas (R: `order_events()`, `is_night_activity()`; input Shiny
+  `night`).
+* Os blocos do mapa não precisam mais de chave de API: OpenStreetMap, ou o mapa
+  de ruas público da Esri para páginas abertas a partir do disco
+  (`tiles = "auto"`, o padrão).
+* As listas são ordenadas por dia e hora antes do agrupamento, evitando que
+  resultados de busca repitam cabeçalhos de dia.
+* Corrigido: um teste usava uma chave de dicionário que havia sido removida;
+  linhas de `\usage` nos arquivos Rd ajustadas para no máximo 90 caracteres.
 
 # aconteceR 0.2.0
 
-* New look in the Lumen / RockShiny family: greeting headline with the city
-  in a gradient, pill search and filter chips, gradient category tiles, rows
-  grouped by day, a floating glass map bar, theme-aware map tiles, light and
-  dark themes.
-* Less crowded layout:
-  - filters are one row of chips;
-  - the list is compact rows;
-  - Add event and Search & import open as panes over the list, from header
-    buttons;
-  - the colour-by switch sits in the map header and the city picker in the
-    page header;
-  - the calendar takes the full width.
-* The Shiny page no longer loads Bootstrap. Bootstrap's styles were loading
-  after ours and turned titles dark on the dark theme.
-* Language at opening: Portuguese in the browser's languages, a Brazilian
-  region or a Brazilian time zone now opens PT-BR (an English browser in
-  Brazil used to get English). The toggle is remembered for the browser
-  session.
-* `map_color_bins()` default `format` no longer calls itself.
-* Rd documentation for every exported function.
-* `mod_map_ui()` gains `place_target` and `modes_target`; `tiles` accepts
-  `"carto"` (default), `"osm"` or light/dark pairs.
+* Novo visual na família Lumen / RockShiny: título de saudação com a cidade em
+  gradiente, busca e *chips* de filtro em formato de pílula, ícones de categoria
+  em gradiente, linhas agrupadas por dia, barra de mapa flutuante em vidro,
+  blocos do mapa adaptados ao tema, temas claro e escuro.
+* Layout mais limpo:
+  - os filtros ficam em uma única linha de *chips*;
+  - a lista usa linhas compactas;
+  - Adicionar evento e Buscar e importar abrem como painéis sobre a lista, a
+    partir de botões no cabeçalho;
+  - o seletor "colorir por" fica no cabeçalho do mapa e o seletor de cidade no
+    cabeçalho da página;
+  - o calendário ocupa toda a largura.
+* A página Shiny não carrega mais o Bootstrap. Os estilos do Bootstrap eram
+  carregados depois dos nossos e deixavam os títulos escuros no tema escuro.
+* Idioma ao abrir: Português nos idiomas do navegador, uma região brasileira ou
+  um fuso horário brasileiro agora abre em PT-BR (antes, um navegador em inglês
+  no Brasil abria em inglês). A escolha no seletor é lembrada durante a sessão
+  do navegador.
+* O argumento padrão `format` de `map_color_bins()` não chama mais a si mesmo.
+* Documentação Rd para todas as funções exportadas.
+* `mod_map_ui()` ganha `place_target` e `modes_target`; `tiles` aceita
+  `"carto"` (padrão), `"osm"` ou pares claro/escuro.
 
 # aconteceR 0.1.0
 
 ## Interface
 
-* Full Brazilian Portuguese and English interface with a PT-BR / EN toggle. One
-  dictionary (`inst/i18n/strings.json`) now serves R and the browser. It
-  covers validation errors, notifications, provider notes, legends, map
-  controls, dates (`Sáb, 05 dez · 20:00`) and money (`R$ 1.250,50`), and
-  formats no longer depend on the R session's locale.
-* The language is detected from `?lang=`, the saved choice, then the browser
-  (`Accept-Language` on the server), before `default_lang`.
-* The map opens on the city closest to the visitor: a time-zone guess first,
-  then browser geolocation when allowed. `?city=` pins a city.
-* Reworked map toolbar: colour by **price** (free, donation and four
-  ticket-price bands) or **category**, clustering with donut clusters,
-  locate / fit / re-centre, live count, legend with counts.
-* The monthly calendar is now a full view over the map (Map / Calendar switch
-  in the toolbar), with coloured chips, a day agenda, "show this day / month on
-  the map" and keyboard navigation.
-* Visual refresh through the Taiga token adapter, including light and dark
-  themes and a layout for small screens.
+* Interface completa em Português do Brasil e Inglês com seletor PT-BR / EN. Um
+  único dicionário (`inst/i18n/strings.json`) atende o R e o navegador. Cobre
+  erros de validação, notificações, notas de provedores, legendas, controles do
+  mapa, datas (`Sáb, 05 dez · 20:00`) e valores monetários (`R$ 1.250,50`), sem
+  depender do *locale* da sessão R.
+* O idioma é detectado a partir de `?lang=`, da escolha salva e depois do
+  navegador (`Accept-Language` no servidor), antes de recorrer a `default_lang`.
+* O mapa abre na cidade mais próxima do visitante: primeiro uma estimativa pelo
+  fuso horário e, quando permitido, geolocalização do navegador. `?city=` fixa
+  uma cidade.
+* Barra de ferramentas do mapa reformulada: colorir por **preço** (grátis,
+  doação e quatro faixas de preço de ingresso) ou **categoria**, agrupamento com
+  *clusters* em rosca, localizar / ajustar / recentralizar, contagem ao vivo e
+  legenda com contagens.
+* O calendário mensal agora é uma visualização completa sobre o mapa (alternância
+  Mapa / Calendário na barra), com *chips* coloridos, agenda do dia, "mostrar
+  este dia / mês no mapa" e navegação por teclado.
+* Renovação visual por meio do adaptador de tokens Taiga, incluindo temas claro
+  e escuro e layout responsivo para telas pequenas.
 
-## Architecture
+## Arquitetura
 
-* Map, calendar, i18n and styles are shared browser components
-  (`inst/www/ac-*.js`) used by both the Shiny app and the standalone HTML.
-  The `leaflet` R package is no longer needed; Leaflet 1.3.1 is vendored.
-* `mod_map` is generic: colour modes via `map_color_factor()` /
-  `map_color_bins()`, plus `toolbar_end` and `overlays` slots.
-* `index.html` is generated by `build_standalone()` (or
-  `tools/build-standalone.mjs`) from `inst/standalone/template.html`. Demo
-  dates in the standalone are now relative to today, and user events get
-  unique ids (older saved events are migrated).
-* Demo site list and templates moved to `inst/extdata/sites.csv` and
-  `site_templates.csv`, shared by R and the standalone.
+* Mapa, calendário, i18n e estilos são componentes de navegador compartilhados
+  (`inst/www/ac-*.js`) usados tanto pelo aplicativo Shiny quanto pelo HTML
+  autônomo. O pacote R `leaflet` não é mais necessário; o Leaflet 1.3.1 está
+  embutido (*vendored*).
+* `mod_map` é genérico: modos de cor via `map_color_factor()` /
+  `map_color_bins()`, além de espaços para `toolbar_end` e `overlays`.
+* `index.html` é gerado por `build_standalone()` (ou
+  `tools/build-standalone.mjs`) a partir de `inst/standalone/template.html`. As
+  datas de demonstração no arquivo autônomo são relativas a hoje, e eventos do
+  usuário recebem identificadores únicos (eventos antigos salvos são migrados).
+* Lista de sites de demonstração e modelos movidos para
+  `inst/extdata/sites.csv` e `site_templates.csv`, compartilhados entre o R e o
+  HTML autônomo.
 
-## Fixes
+## Correções
 
-* Demo events are seeded once per database (in one transaction) instead of
-  being re-validated on every session. They are re-dated when they have all
-  passed.
-* Standalone: "show on map" works for search results from other cities.
-  Clusters now re-form on zoom.
+* Eventos de demonstração são carregados em uma única transação por banco de
+  dados em vez de serem revalidados a cada sessão, e têm suas datas atualizadas
+  quando ficam no passado.
+* HTML autônomo: "mostrar no mapa" funciona para resultados de busca de outras
+  cidades. Os *clusters* agora são recalculados ao aplicar zoom.

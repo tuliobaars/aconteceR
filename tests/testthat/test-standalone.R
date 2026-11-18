@@ -30,3 +30,25 @@ test_that("the committed index.html is up to date (R and Node builders agree)", 
     expected.label = "index.html (rebuild with aconteceR::build_standalone(\"index.html\"))"
   )
 })
+
+test_that("run_app updates events and generates standalone HTML when opened", {
+  db_file <- tempfile(fileext = ".sqlite")
+  html_file <- tempfile(fileext = ".html")
+  on.exit(unlink(c(db_file, html_file)), add = TRUE)
+
+  app <- run_app(
+    db_path = db_file,
+    cities = load_cities()[1:2, ],
+    places = load_places()[1:4, ],
+    standalone_path = html_file
+  )
+  expect_s3_class(app, "shiny.appobj")
+  expect_true(file.exists(html_file))
+  expect_gt(file.size(html_file), 100000)
+
+  con <- db_connect(db_file)
+  on.exit(DBI::dbDisconnect(con), add = TRUE)
+  ev <- db_fetch_events(con)
+  expect_gt(nrow(ev), 1280L)
+  expect_true(all(c("sample", "sympla", "eventbrite", "meetup") %in% ev$source))
+})
